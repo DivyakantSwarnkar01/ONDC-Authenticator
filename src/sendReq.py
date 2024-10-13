@@ -7,7 +7,8 @@ import nacl.hash
 import requests  # Import requests for sending HTTP requests
 from nacl.bindings import crypto_sign_ed25519_sk_to_seed
 from nacl.signing import SigningKey, VerifyKey
-
+import csv
+import os
 
 def hash_message(msg: str):
     HASHER = nacl.hash.blake2b
@@ -77,6 +78,37 @@ def send_request(url, headers, json_body):
     return response
 
 
+def log_request_response(request_body, created, expires, response, transaction_id, message_id):
+    """Log the request and response to CSV and log files."""
+    log_file = 'request_log.csv'
+    log_entries = {
+        'Transaction ID': transaction_id,
+        'Message ID': message_id,
+        'Created Timestamp': created,
+        'Expires Timestamp': expires,
+        'Request Body': json.dumps(request_body),
+        'Response Status Code': response.status_code,
+        'Response Body': response.text,
+        'Timestamp': datetime.datetime.now().isoformat()
+    }
+    
+    # Write to CSV
+    file_exists = os.path.isfile(log_file)
+    with open(log_file, mode='a', newline='') as csvfile:
+        fieldnames = log_entries.keys()
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        if not file_exists:
+            writer.writeheader()  # Write the header only if the file is new
+        writer.writerow(log_entries)
+    
+    # Log response to a log file
+    with open('request_response.log', 'a') as logfile:
+        logfile.write(f"{datetime.datetime.now().isoformat()} - Transaction ID: {transaction_id}, "
+                       f"Message ID: {message_id}, Status Code: {response.status_code}, "
+                       f"Response: {response.text}\n")
+
+
 # Generate unique transaction ID, message ID, and Unix timestamp
 transaction_id, message_id, timestamp_unix = generate_time_info()
 
@@ -91,7 +123,7 @@ request_body = {
         "city": "Kochi",
         "action": "search",
         "core_version": "0.9.1",
-        "bap_id": "www.indiacost.in", #Your unique URL that is whitelisted on ONDC adjust it as per need.
+        "bap_id": "www.indiacost.in",
         "bap_uri": "/bapl",  # Adjusted to use staging_url as per requirement
         "transaction_id": transaction_id,
         "message_id": message_id,
@@ -133,6 +165,9 @@ url = "https://example.com/api"  # Replace with your desired URL
 
 # Send the request and get the response
 response = send_request(url, headers={"Authorization": auth_header, "Content-Type": "application/json"}, json_body=request_body)
+
+# Log the request and response details
+log_request_response(request_body, created_time, expires_time, response, transaction_id, message_id)
 
 # Print the response
 print(response.status_code)
