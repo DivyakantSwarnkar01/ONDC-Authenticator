@@ -1,24 +1,29 @@
-Here's a sample README for your project. You can modify it as needed to suit your preferences or add additional details.
+Here’s a README file for your project, detailing the functionality and usage of the provided code.
 
 ```markdown
-# Authorization Header and Request Sender
+# API Request Logger
 
-This project provides a Python implementation for generating an authorization header and sending a POST request with a JSON body. It uses the NaCl library for cryptographic signing and verification, and UUID for generating unique IDs.
+This project is a Python script designed to send authenticated API requests, log request and response details, and save this information in CSV and log file formats. The script uses the NaCl library for cryptographic signing and the `requests` library to handle HTTP requests.
 
 ## Features
 
-- Generate unique transaction and message IDs using UUID.
-- Create an authorization header with dynamic timestamps.
-- Sign the request using Ed25519 keys.
-- Send a POST request with custom headers and JSON body to a specified URL.
+- Generate unique transaction and message IDs.
+- Create a secure authorization header using private key signing.
+- Send JSON body as part of the request.
+- Log all request and response details, including:
+  - Request body
+  - Created and expiration timestamps
+  - Response status code and body
+- Append data to existing CSV and log files without overwriting.
 
-## Requirements
+## Prerequisites
 
 - Python 3.x
-- `nacl` library for cryptographic functions
-- `requests` library for sending HTTP requests
+- Required Python packages:
+  - `nacl`
+  - `requests`
 
-You can install the required libraries using pip:
+You can install the necessary packages using pip:
 
 ```bash
 pip install pynacl requests
@@ -26,86 +31,51 @@ pip install pynacl requests
 
 ## Usage
 
-1. **Set Hard-Coded Values**: Update the hard-coded values in the script with your own:
-   - `subscriber_id`: Your subscriber ID.
-   - `unique_key_id`: Your unique key ID.
-   - `private_key`: Your private key for signing.
+1. Clone the repository or download the script.
 
-2. **Specify the URL**: Update the `url` variable with the endpoint where you want to send the POST request.
+2. Update the hard-coded values in the script:
+   - Replace `YOUR_SUBSCRIBER_ID` with your actual subscriber ID.
+   - Replace `Your_UNIQUE_KEY_ID` with your unique key ID.
+   - Replace `YOUR_PRIVATE_KEY` with your private key.
+   - Update the `url` variable with the desired API endpoint.
 
-3. **Run the Script**: Execute the script in your Python environment:
+3. Run the script:
 
-   ```bash
-   python your_script.py
-   ```
+```bash
+python your_script_name.py
+```
 
 ## Code Overview
 
-### Key Functions
+- **Hashing and Signing**:
+  - The script uses the Blake2b hashing algorithm to hash the message and then signs the hash with an Ed25519 private key.
+  
+- **Authorization Header Creation**:
+  - Generates an authorization header for API requests using the created timestamp, expiration timestamp, and the signed hash.
 
-- **`hash_message(msg)`**: Generates a BLAKE-512 hash of the provided message.
-- **`create_signing_string(digest_base64, created, expires)`**: Creates the signing string used for generating the signature.
-- **`sign_response(signing_key, private_key)`**: Signs the provided signing key using the private key.
-- **`generate_time_info()`**: Generates unique transaction ID, message ID, and current Unix timestamp.
-- **`generate_time_stamps()`**: Generates Unix timestamps for `created` and `expires`.
-- **`create_authorisation_header(...)`**: Creates the authorization header with necessary information.
-- **`send_request(url, headers, json_body)`**: Sends a POST request to the specified URL with the provided headers and JSON body.
+- **Logging Functionality**:
+  - The `log_request_response` function saves the request body, timestamps, IDs, and response details into a CSV file (`request_log.csv`) and a log file (`request_response.log`).
+  - Each entry is timestamped and appended to the existing files if they already exist.
 
-### Example Request Body
+## File Structure
 
-The request body is structured as follows:
-
-```json
-{
-    "context": {
-        "domain": "nic2004:60212",
-        "country": "IND",
-        "city": "Kochi",
-        "action": "search",
-        "core_version": "0.9.1",
-        "bap_id": "www.indiacost.in",
-        "bap_uri": "/bapl",
-        "transaction_id": "generated-transaction-id",
-        "message_id": "generated-message-id",
-        "timestamp": "ISO-formatted-timestamp",
-        "ttl": "P1M"
-    },
-    "message": {
-        "intent": {
-            "fulfillment": {
-                "start": {
-                    "location": {
-                        "gps": "10.108768,76.347517"
-                    }
-                },
-                "end": {
-                    "location": {
-                        "gps": "10.102997,76.353480"
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+- `request_log.csv` - CSV file that logs request and response data.
+- `request_response.log` - Log file that contains a detailed request-response log.
 
 ## Contributing
 
-Feel free to contribute to this project by submitting issues, feature requests, or pull requests.
+Feel free to fork the repository and submit pull requests. If you have suggestions for improvements or find bugs, please create an issue in the GitHub repository.
 
-## Acknowledgments
+## License
 
-- [NaCl](https://nacl.cr.yp.to/) for cryptographic functions.
-- [UUID](https://docs.python.org/3/library/uuid.html) for generating unique IDs.
-- [Requests](https://docs.python-requests.org/en/master/) for handling HTTP requests.
+This project is open-source and available under the [MIT License](LICENSE).
 
 ```
 
-### Notes:
-- Update any placeholders like `your_script.py` to the actual name of your script.
-- Feel free to customize the content, add examples, or include any additional instructions as necessary.
-- If you have a specific license in mind, make sure to include it in the `License` section.
+### Instructions for Use
+
+1. **Make sure to update the values in the code** to reflect your actual API credentials and endpoint before running it.
+2. **Install the required libraries** as mentioned in the prerequisites section.
+3. **Run the script** to initiate the API request and log the details. The CSV and log files will be created or appended to as necessary. 
+
+Feel free to modify any sections based on your specific needs or additional features you might want to highlight!
