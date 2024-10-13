@@ -91,7 +91,7 @@ request_body = {
         "city": "Kochi",
         "action": "search",
         "core_version": "0.9.1",
-        "bap_id": "www.indiacost.in",
+        "bap_id": "www.indiacost.in", #Your unique URL that is whitelisted on ONDC adjust it as per need.
         "bap_uri": "/bapl",  # Adjusted to use staging_url as per requirement
         "transaction_id": transaction_id,
         "message_id": message_id,
