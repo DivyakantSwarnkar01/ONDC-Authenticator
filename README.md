@@ -1,81 +1,117 @@
-Here’s a README file for your project, detailing the functionality and usage of the provided code.
+Here's a comprehensive `README.md` file for your `header_tool.py` project, detailing its purpose, usage, and functionality for generating and verifying ONDC authorization headers:
 
 ```markdown
-# API Request Logger
+# ONDC Authorization Header Tool
 
-This project is a Python script designed to send authenticated API requests, log request and response details, and save this information in CSV and log file formats. The script uses the NaCl library for cryptographic signing and the `requests` library to handle HTTP requests.
+## Overview
+
+The ONDC Authorization Header Tool is a command-line utility for generating and verifying authorization headers compliant with the Open Network for Digital Commerce (ONDC) standards. This tool enables developers to easily create authorization headers required for API requests and validate these headers to ensure secure communications.
 
 ## Features
 
-- Generate unique transaction and message IDs.
-- Create a secure authorization header using private key signing.
-- Send JSON body as part of the request.
-- Log all request and response details, including:
-  - Request body
-  - Created and expiration timestamps
-  - Response status code and body
-- Append data to existing CSV and log files without overwriting.
+- **Generate Authorization Header**: Create a signature-based authorization header for API requests using a specified JSON request body.
+- **Verify Authorization Header**: Validate an existing authorization header against a provided JSON request body and public key.
+- **Environment Configuration**: Load private keys, public keys, unique IDs, and subscriber IDs from an `.env` file for secure storage of sensitive information.
+- **Support for Dynamic JSON**: Automatically generates a default JSON request body with dynamic fields if no request body is specified.
 
 ## Prerequisites
 
-- Python 3.x
-- Required Python packages:
-  - `nacl`
-  - `requests`
+Before using this tool, ensure you have the following:
 
-You can install the necessary packages using pip:
+- Python 3.x installed on your system.
+- Required Python packages. Install them using:
 
 ```bash
-pip install pynacl requests
+pip install python-dotenv PyNaCl
+```
+
+- A `.env` file containing the following variables:
+
+```
+PRIVATE_KEY=<YourPrivateKeyBase64>
+PUBLIC_KEY=<YourPublicKeyBase64>
+UNIQUE_KEY_ID=<YourUniqueKeyID>
+SUBSCRIBER_ID=<YourSubscriberID>
 ```
 
 ## Usage
 
-1. Clone the repository or download the script.
+### Command-Line Interface
 
-2. Update the hard-coded values in the script:
-   - Replace `YOUR_SUBSCRIBER_ID` with your actual subscriber ID.
-   - Replace `Your_UNIQUE_KEY_ID` with your unique key ID.
-   - Replace `YOUR_PRIVATE_KEY` with your private key.
-   - Update the `url` variable with the desired API endpoint.
-
-3. Run the script:
+The tool can be executed from the command line using the following syntax:
 
 ```bash
-python your_script_name.py
+python header_tool.py <command> [options]
 ```
 
-## Code Overview
+### Commands
 
-- **Hashing and Signing**:
-  - The script uses the Blake2b hashing algorithm to hash the message and then signs the hash with an Ed25519 private key.
-  
-- **Authorization Header Creation**:
-  - Generates an authorization header for API requests using the created timestamp, expiration timestamp, and the signed hash.
+#### 1. Generate Authorization Header
 
-- **Logging Functionality**:
-  - The `log_request_response` function saves the request body, timestamps, IDs, and response details into a CSV file (`request_log.csv`) and a log file (`request_response.log`).
-  - Each entry is timestamped and appended to the existing files if they already exist.
+To generate an authorization header, use the `generate` command with an optional request body file:
 
-## File Structure
+```bash
+python header_tool.py generate --request_body <path_to_json_file>
+```
 
-- `request_log.csv` - CSV file that logs request and response data.
-- `request_response.log` - Log file that contains a detailed request-response log.
+- If you do not provide a request body file, the tool will generate a default request body with dynamic fields.
 
-## Contributing
+#### 2. Verify Authorization Header
 
-Feel free to fork the repository and submit pull requests. If you have suggestions for improvements or find bugs, please create an issue in the GitHub repository.
+To verify an existing authorization header, use the `verify` command:
+
+```bash
+python header_tool.py verify --auth_header "<your_authorization_header>" --request_body <path_to_json_file> --public_key "<your_public_key>"
+```
+
+- Ensure to provide all three arguments: `--auth_header`, `--request_body`, and `--public_key`.
+
+### Examples
+
+#### Generating an Authorization Header
+
+```bash
+python header_tool.py generate --request_body body.json
+```
+
+Output:
+```
+Generated Authorization Header:
+Signature keyId="www.indiacost.in|475fa200-e957-4966-ab79-597de00f6e03|ed25519",algorithm="ed25519",created="1728932010",expires="1728935610",headers="(created) (expires) digest",signature="0FwuNiRKHCn0iXY1Tid8+LCg6fagyq8fwZwFsTUwpUpJRDPsiPyXoTuiZKAWuVUGGe1qNlLfBuesOR+AifOvBQ=="
+```
+
+#### Verifying an Authorization Header
+
+```bash
+python header_tool.py verify --auth_header "Signature keyId=..." --request_body body.json --public_key "atHDSd14uEFrv+i2CyHSNxl61QUXbhVYHTlUOkWwCkY="
+```
+
+Output:
+```
+Verification result: True
+```
+
+## Error Handling
+
+- **File Not Found**: If the specified request body file does not exist, the tool will print an error message and terminate.
+- **Invalid JSON**: If the JSON request body is malformed, an error message will be displayed indicating the nature of the error.
+
+## Contribution
+
+Contributions to enhance the functionality of this tool are welcome! Please open an issue or submit a pull request with your changes.
 
 ## License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
+## Author
+
+Developed by [Your Name](https://yourwebsite.com).
 ```
 
-### Instructions for Use
+### Instructions
 
-1. **Make sure to update the values in the code** to reflect your actual API credentials and endpoint before running it.
-2. **Install the required libraries** as mentioned in the prerequisites section.
-3. **Run the script** to initiate the API request and log the details. The CSV and log files will be created or appended to as necessary. 
+- Replace `<YourPrivateKeyBase64>`, `<YourPublicKeyBase64>`, `<YourUniqueKeyID>`, and `<YourSubscriberID>` with the actual keys and IDs you'll be using.
+- Update the author information at the end of the document with your name and website if desired.
 
-Feel free to modify any sections based on your specific needs or additional features you might want to highlight!
+This `README.md` file should provide clear guidance for users on how to use your command-line tool for ONDC authorization header generation and verification.
