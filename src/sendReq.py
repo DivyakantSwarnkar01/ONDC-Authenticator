@@ -137,20 +137,26 @@ def main():
             except FileNotFoundError:
                 print(f"File not found: {args.request_body}")
                 return
+            
+            # Convert request_body to a single-line format
+            request_body_inline = request_body.replace("\n", "").replace(" ", "")
+            print("Using external request body:")
+            print(request_body_inline)  # Print the JSON request body without spaces
+            
         else:
             # Default request body as a single inline string without spaces and with dynamic fields
             timestamp_iso = datetime.datetime.now(datetime.timezone.utc).isoformat() + 'Z'
             message_id = str(uuid.uuid4())
             transaction_id = str(uuid.uuid4())
-            request_body_inline = '{"context":{"domain":"nic2004:52110","country":"IND","city":"std:011","action":"search","core_version":"0.9.1","bap_id":"(Subscriber ID)","bap_uri":"(Your URI Callback)","transaction_id":"'+transaction_id+'","message_id":"'+message_id+'","timestamp":"'+timestamp_iso+'","ttl":"PT1H"},"message":{"intent":{"fulfillment":{"start":{"location":{"gps":"28.6129,77.2295"}},"end":{"location":{"gps":"28.6310,77.2167"}}}}}}'
+            request_body_inline = '{"context":{"domain":"nic2004:52110","country":"IND","city":"std:011","action":"search","core_version":"0.9.1","bap_id":"www.indiacost.in","bap_uri":"https://www.indiacost.in/bapl","transaction_id":"'+transaction_id+'","message_id":"'+message_id+'","timestamp":"'+timestamp_iso+'","ttl":"PT1H"},"message":{"intent":{"fulfillment":{"start":{"location":{"gps":"28.6129,77.2295"}},"end":{"location":{"gps":"28.6310,77.2167"}}}}}}'
 
-            request_body = request_body_inline
+            request_body_inline = request_body_inline.replace("\n", "").replace(" ", "")
             print("Using default request body with dynamic fields:")
-            print(request_body)  # Print the JSON request body
+            print(request_body_inline)  # Print the JSON request body
 
         # Ensure the JSON is valid and minified
         try:
-            request_body_min = json.dumps(json.loads(request_body), separators=(',', ':'))
+            request_body_min = json.dumps(json.loads(request_body_inline), separators=(',', ':'))
         except json.JSONDecodeError as e:
             print(f"Invalid JSON request body: {e}")
             return
@@ -171,9 +177,12 @@ def main():
             print(f"File not found: {args.request_body}")
             return
 
+        # Convert request_body to a single-line format
+        request_body_inline = request_body.replace("\n", "").replace(" ", "")
+        
         # Ensure the JSON is valid and minified
         try:
-            request_body_min = json.dumps(json.loads(request_body), separators=(',', ':'))
+            request_body_min = json.dumps(json.loads(request_body_inline), separators=(',', ':'))
         except json.JSONDecodeError as e:
             print(f"Invalid JSON request body: {e}")
             return
@@ -183,7 +192,6 @@ def main():
 
     else:
         parser.print_help()
-
 
 if __name__ == '__main__':
     main()
