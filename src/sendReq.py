@@ -142,7 +142,7 @@ def main():
             timestamp_iso = datetime.datetime.now(datetime.timezone.utc).isoformat() + 'Z'
             message_id = str(uuid.uuid4())
             transaction_id = str(uuid.uuid4())
-            request_body_inline = '{"context":{"domain":"nic2004:52110","country":"IND","city":"std:011","action":"search","core_version":"0.9.1","bap_id":"www.indiacost.in","bap_uri":"https://www.indiacost.in/bapl","transaction_id":"'+transaction_id+'","message_id":"'+message_id+'","timestamp":"'+timestamp_iso+'","ttl":"PT1H"},"message":{"intent":{"fulfillment":{"start":{"location":{"gps":"28.6129,77.2295"}},"end":{"location":{"gps":"28.6310,77.2167"}}}}}}'
+            request_body_inline = '{"context":{"domain":"nic2004:52110","country":"IND","city":"std:011","action":"search","core_version":"0.9.1","bap_id":"(Subscriber ID)","bap_uri":"(Your URI Callback)","transaction_id":"'+transaction_id+'","message_id":"'+message_id+'","timestamp":"'+timestamp_iso+'","ttl":"PT1H"},"message":{"intent":{"fulfillment":{"start":{"location":{"gps":"28.6129,77.2295"}},"end":{"location":{"gps":"28.6310,77.2167"}}}}}}'
 
             request_body = request_body_inline
             print("Using default request body with dynamic fields:")
