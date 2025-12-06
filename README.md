@@ -106,7 +106,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Author
 
-Developed by [Your Name](https://yourwebsite.com).
+Developed by [Shubham Seth](https://indiarolls.in).
 ```
 
 ### Instructions
