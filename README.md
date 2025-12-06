@@ -115,3 +115,12 @@ Developed by [Shubham Seth](https://indiarolls.in).
 - Update the author information at the end of the document with your name and website if desired.
 
 This `README.md` file should provide clear guidance for users on how to use your command-line tool for ONDC authorization header generation and verification.
+
+
+Useful Tools endpoints:
+
+https://www.indiarolls.in/pinterest/downloader/reels (Advanced Version)
+
+https://www.indiarolls.in/pinterest-reels-downloader
+
+https://www.indiarolls.in/pinterest-video-downloader
